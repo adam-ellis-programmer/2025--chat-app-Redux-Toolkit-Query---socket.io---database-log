@@ -8,13 +8,15 @@ import cookieParser from 'cookie-parser'
 import { createServer } from 'http'
 import connectDB from './config/db.js'
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'
-import authRoutes from './routes/auth.js'
 import { initializeSocket } from './socketHandler.js'
 
 import passport from 'passport'
 import { configurePassport } from './config/passport.js'
+import configureRoutes from './configureRoutes.js'
 
-// Connect to database
+// ============================
+// CONNECT TO DATABASE
+// ============================
 connectDB()
 
 console.log('🔍 Environment variables check:')
@@ -26,9 +28,12 @@ console.log(
   'GOOGLE_CLIENT_SECRET:',
   process.env.GOOGLE_CLIENT_SECRET ? 'EXISTS' : 'MISSING'
 )
-console.log('---')
+console.log('--server running--')
 
 // Configure Passport after environment is loaded
+// ============================
+// CONFIGURE PASSPORT SETUP
+// ============================
 configurePassport()
 
 const app = express()
@@ -37,7 +42,9 @@ const server = createServer(app)
 // Initialize Socket.IO
 const io = initializeSocket(server)
 
-// Middleware
+// ============================
+// APP MIDDLEWARE
+// ============================
 app.use(express.json())
 app.use(cookieParser())
 app.use(
@@ -46,30 +53,28 @@ app.use(
     credentials: true,
   })
 )
+
+// ============================
+// INITIALIZE PASSPORT FOR AUTH
+// ============================
 app.use(passport.initialize())
 
-// make app routes in a new file
+// ============================
+// SET UP ROUTES
+// ============================
+configureRoutes(app)
 
-app.use('/api/auth', authRoutes)
-
-// Basic route
-app.get('/api/health', (req, res) => {
-  res.json({ 
-    message: 'Server is running!',
-    environment: process.env.NODE_ENV || 'development',
-    appName: process.env.APP_NAME || 'ChatApp',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    googleConfigured: !!process.env.GOOGLE_CLIENT_ID,
-    socketIO: 'enabled',
-  })
-})
-
+// ============================
+// ERROR / NOT FOUND MIDDLEWARE
+// ============================
 app.use(notFound)
 app.use(errorHandler)
 
-const PORT = process.env.PORT || 5001
 
+// ============================
+// PORT AND SERVER LISTEN
+// ============================
+const PORT = process.env.PORT || 5001
 server.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`)
   console.log(`📊 Health check: http://localhost:${PORT}/api/health`)
