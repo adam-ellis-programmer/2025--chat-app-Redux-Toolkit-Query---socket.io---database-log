@@ -108,7 +108,7 @@ const ChatPage = () => {
         }`}
       >
         <div
-          className={`max-w-[70%] rounded-lg p-3 ${
+          className={`max-w-[70%] rounded-lg min-w-[200px] p-3 ${
             msg.userId === user?.id
               ? 'bg-rose-500 text-white'
               : 'bg-gray-200 text-gray-800'
@@ -204,11 +204,11 @@ const ChatPage = () => {
       {/* Right chat area */}
       <div className='flex flex-col h-full'>
         <p className='text-2xl text-center text-white mt-10 capitalize'>
-          chat away
+          chat screen
         </p>
 
         <section className='flex-1 mt-20 px-4'>
-          <div className='max-w-[1000px] h-[500px] bg-white mx-auto rounded relative overflow-hidden'>
+          <div className='max-w-[1000px] h-[500px] bg-white mx-auto rounded relative overflow-hidden '>
             {/* Chat Messages */}
             <div className='h-full overflow-y-auto p-4 space-y-4'>
               {messages.length === 0 ? (
@@ -218,7 +218,7 @@ const ChatPage = () => {
               ) : (
                 messages.map((msg) => renderMessage(msg))
               )}
-              <div ref={messagesEndRef} />
+              <div  ref={messagesEndRef} />
             </div>
           </div>
 

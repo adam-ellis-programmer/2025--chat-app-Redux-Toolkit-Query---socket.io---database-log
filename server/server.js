@@ -12,7 +12,7 @@ import { initializeSocket } from './socketHandler.js'
 
 import passport from 'passport'
 import { configurePassport } from './config/passport.js'
-import configureRoutes from './configureRoutes.js'
+import configureRoutes from './config/configureRoutes.js'
 
 // ============================
 // CONNECT TO DATABASE
@@ -69,7 +69,6 @@ configureRoutes(app)
 // ============================
 app.use(notFound)
 app.use(errorHandler)
-
 
 // ============================
 // PORT AND SERVER LISTEN

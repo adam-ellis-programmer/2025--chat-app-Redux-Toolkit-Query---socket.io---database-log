@@ -1,5 +1,5 @@
 // routes/index.js
-import authRoutes from './routes/auth.js'
+import authRoutes from '../routes/auth.js'
 // Import other route files as you create them
 // import productRoutes from './products.js'
 // import userRoutes from './users.js'
@@ -9,6 +9,8 @@ import authRoutes from './routes/auth.js'
 const configureRoutes = (app) => {
   // Mount all routes
   app.use('/api/auth', authRoutes)
+
+  // how to handle room id on the server
 
   // Add other routes as you create them
   // app.use('/api/products', productRoutes)
