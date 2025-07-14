@@ -22,6 +22,7 @@ import {
 import { authenticateToken } from '../middleware/authMiddleware.js'
 
 const router = express.Router()
+// /api/auth/...
 
 // @route   POST /api/auth/register
 // @desc    Register a new user

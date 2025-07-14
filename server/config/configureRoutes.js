@@ -1,21 +1,13 @@
 // routes/index.js
 import authRoutes from '../routes/auth.js'
-// Import other route files as you create them
-// import productRoutes from './routes/products.js'
-// import productRoutes from './routes/products.js'
-// import userRoutes from './routes/users.js'
-// import orderRoutes from './routes/orders.js'
-// import uploadRoutes from './routes/upload.js'
- 
+import roomRoutes from '../routes/room.js'
+import messageRoutes from '../routes/message.js'
+
 const configureRoutes = (app) => {
   // Mount all routes
   app.use('/api/auth', authRoutes)
-
-  // Add other routes as you create them
-  // app.use('/api/products', productRoutes)
-  // app.use('/api/users', userRoutes)
-  // app.use('/api/orders', orderRoutes)
-  // app.use('/api/upload', uploadRoutes)
+  app.use('/api/rooms', roomRoutes)
+  app.use('/api/messages', messageRoutes)
 
   // Basic health check route
   app.get('/api/health', (req, res) => {
