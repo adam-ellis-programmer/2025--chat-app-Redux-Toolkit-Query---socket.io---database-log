@@ -108,7 +108,7 @@ const ChatPage = () => {
         }`}
       >
         <div
-          className={`max-w-[70%] rounded-lg min-w-[200px] p-3 ${
+          className={` rounded-lg min-w-[200px] max-w-[200px] p-3 ${
             msg.userId === user?.id
               ? 'bg-rose-500 text-white'
               : 'bg-gray-200 text-gray-800'
@@ -218,7 +218,7 @@ const ChatPage = () => {
               ) : (
                 messages.map((msg) => renderMessage(msg))
               )}
-              <div  ref={messagesEndRef} />
+              <div ref={messagesEndRef} />
             </div>
           </div>
 

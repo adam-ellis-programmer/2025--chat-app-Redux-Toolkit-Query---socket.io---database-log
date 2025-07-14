@@ -26,7 +26,7 @@ const initializeSocket = (server) => {
   })
 
   // ====================================
-  // 🔒 ADD AUTHENTICATION MIDDLEWARE HERE
+  // 🔒 AUTHENTICATION MIDDLEWARE
   // ====================================
   io.use((socket, next) => {
     try {
