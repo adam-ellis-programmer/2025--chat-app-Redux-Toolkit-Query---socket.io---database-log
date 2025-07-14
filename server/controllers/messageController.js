@@ -1,5 +1,5 @@
-import Message from "../models/Message"
-
+// import Message from "../models/Message"
+import Message from '../models/Message.js'
 // Similar structure for message controller
 export const getMessages = async (req, res) => {
   try {
@@ -9,10 +9,17 @@ export const getMessages = async (req, res) => {
   }
 }
 
+// // Method 3: Multiple fields, different models
+// .populate('userId', 'username email')
+// .populate('roomId', 'name')
+
 export const getMessagesByRoom = async (req, res) => {
   try {
     const { roomId } = req.params
-    const messages = await Message.find({ roomId }).populate('userId', 'username')
+    const messages = await Message.find({ roomId }).populate(
+      'userId',
+      'username email profile.firstName'
+    )
     res.json(messages)
   } catch (error) {
     res.status(500).json({ error: error.message })

@@ -15,7 +15,7 @@ const baseQuery = fetchBaseQuery({
 // Parent API slice - shared configuration for all child slices
 export const apiSlice = createApi({
   reducerPath: 'api',
-  baseQuery, 
-  tagTypes: ['User', 'Chat', 'Message'], // For cache invalidation
+  baseQuery,
+  tagTypes: ['User', 'Chat', 'Message', 'Room'], // For cache invalidation
   endpoints: (builder) => ({}), // Empty - endpoints injected by children
 })

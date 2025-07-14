@@ -8,6 +8,9 @@ const AdminHome = () => {
   const handleLogNav = () => {
     navigate('/admin/logs')
   }
+  const handleUserNav = () => {
+    navigate('/admin/users')
+  }
   return (
     <div>
       <section className='pt-20'>
@@ -26,7 +29,7 @@ const AdminHome = () => {
             <IoChatbox className='text-8xl' />
             <p className='text-2xl font-[300] ml-10'>view chat logs </p>
           </div>
-          <div className='text-white   flex items-center shadow-2xl p-10 rounded-2xl cursor-pointer'>
+          <div  onClick={handleUserNav} className='text-white   flex items-center shadow-2xl p-10 rounded-2xl cursor-pointer'>
             <FaUsers className='text-8xl' />
             <p className='text-2xl font-[300] ml-10'>view users </p>
           </div>

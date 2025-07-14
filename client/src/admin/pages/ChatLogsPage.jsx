@@ -1,10 +1,11 @@
 import { sampleMessages } from '../../temp data/messageData'
+import SearchChats from '../SearchChats'
 import ChatLogWindow from './ChatLogWindow'
 import ChatRoomSelection from './ChatRoomSelection'
 
 const ChatLogsPage = () => {
   return (
-    <div className='min-h-screen'>
+    <div className='min-h-screen md:max-w-[95%] mx-auto'>
       <section className='p-10'>
         <h1 className='text-3xl text-white text-center capitalize'>
           admin chat logs page
@@ -15,8 +16,9 @@ const ChatLogsPage = () => {
         <div className='grid md:grid-cols-[500px_1fr] gap-4'>
           <div className=''>
             <p className='text-white text-3xl text-center capitalize'>
-              chat room
+              chat rooms
             </p>
+            <SearchChats /> 
             {/* room selector wrapper */}
             <ChatRoomSelection />
           </div>

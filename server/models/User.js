@@ -31,6 +31,11 @@ const userSchema = new mongoose.Schema(
       sparse: true, // Allows multiple null values
     },
 
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
+
     // Make password optional for Google-only users
     password: {
       type: String,

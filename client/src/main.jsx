@@ -21,7 +21,13 @@ import PublicRoute from './components/PublicRoute.jsx'
 
 import AuthChecker from './components/AuthChecker.js'
 import AuthChecker2 from './components/AuthChecker2.js'
-import { AdminHome, AdminLayout, ChatLogsPage } from './admin/index.js'
+// ADMIN ROUTES
+import {
+  AdminHome,
+  AdminLayout,
+  ChatLogsPage,
+  UsersPage,
+} from './admin/index.js'
 
 const router = createBrowserRouter([
   {
@@ -62,6 +68,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, Component: AdminHome },
       { path: 'logs', Component: ChatLogsPage },
+      { path: 'users', Component: UsersPage },
     ],
   },
 ])
