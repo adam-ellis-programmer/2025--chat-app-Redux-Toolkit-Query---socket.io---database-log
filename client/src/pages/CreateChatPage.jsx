@@ -66,7 +66,7 @@ const CreateChatPage = () => {
       </section>
 
       <section className='mt-10'>
-        <div className='grid grid-cols-2'>
+        <div className='grid md:grid-cols-2'>
           <div>
             <form onSubmit={handleCreateRoom} className='max-w-[500px] mx-auto'>
               <p className='capitalize text-2xl text-center text-white mb-5'>

@@ -6,7 +6,7 @@ import authRoutes from '../routes/auth.js'
 // import userRoutes from './routes/users.js'
 // import orderRoutes from './routes/orders.js'
 // import uploadRoutes from './routes/upload.js'
-
+ 
 const configureRoutes = (app) => {
   // Mount all routes
   app.use('/api/auth', authRoutes)
