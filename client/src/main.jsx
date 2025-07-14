@@ -21,6 +21,7 @@ import PublicRoute from './components/PublicRoute.jsx'
 
 import AuthChecker from './components/AuthChecker.js'
 import AuthChecker2 from './components/AuthChecker2.js'
+import { AdminHome, AdminLayout, ChatLogsPage } from './admin/index.js'
 
 const router = createBrowserRouter([
   {
@@ -53,6 +54,14 @@ const router = createBrowserRouter([
       { path: 'create', Component: CreateChatPage },
       { path: 'user', Component: UserDash },
       { path: ':roomName', Component: ChatPage }, // Add dynamic room route
+    ],
+  },
+  {
+    path: 'admin',
+    element: <AdminLayout />,
+    children: [
+      { index: true, Component: AdminHome },
+      { path: 'logs', Component: ChatLogsPage },
     ],
   },
 ])
