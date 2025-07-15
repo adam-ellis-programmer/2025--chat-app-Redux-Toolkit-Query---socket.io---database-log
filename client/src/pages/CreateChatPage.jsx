@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router'
 import { useSelector } from 'react-redux'
 import { useSocket } from '../context/SocketContext'
 import LogoutBtn from '../components/Auth Buttons/LogoutBtn'
+import BackBtn from '../components/BackBtn'
 
 // // In CreateChatPage.jsx
 // import { useContext } from 'react'
@@ -89,6 +90,10 @@ const CreateChatPage = () => {
                   Start Chat
                 </button>
                 <LogoutBtn />
+                {/* dynamic button */}
+                {/* <div className='flex justify-center  mt-20'>
+                  <BackBtn route='/' />
+                </div> */}
               </div>
             </form>
           </div>

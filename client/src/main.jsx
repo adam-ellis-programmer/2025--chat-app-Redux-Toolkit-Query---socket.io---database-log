@@ -18,6 +18,7 @@ import {
 import CreateChatPage from './pages/CreateChatPage.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import PublicRoute from './components/PublicRoute.jsx'
+import AdminProtectedRoute from './components/AdminProtectedRoute.jsx' // ← New import
 
 import AuthChecker from './components/AuthChecker.js'
 import AuthChecker2 from './components/AuthChecker2.js'
@@ -59,16 +60,38 @@ const router = createBrowserRouter([
       { index: true, Component: ChatPage },
       { path: 'create', Component: CreateChatPage },
       { path: 'user', Component: UserDash },
-      { path: ':roomName', Component: ChatPage }, // Add dynamic room route
+      { path: ':roomName', Component: ChatPage },
     ],
   },
   {
     path: 'admin',
-    element: <AdminLayout />,
+    element: (
+      <AdminProtectedRoute requiredRoles={['admin']}>
+        <AdminLayout />
+      </AdminProtectedRoute>
+    ),
     children: [
       { index: true, Component: AdminHome },
-      { path: 'logs', Component: ChatLogsPage },
-      { path: 'users', Component: UsersPage },
+      {
+        path: 'logs',
+        element: (
+          <AdminProtectedRoute requiredRoles={['admin']}>
+            {' '}
+            {/* ← Extra protection for sensitive routes */}
+            <ChatLogsPage />
+          </AdminProtectedRoute>
+        ),
+      },
+      {
+        path: 'users',
+        element: (
+          <AdminProtectedRoute requiredRoles={['admin', 'manager']}>
+            {' '}
+            {/* ← Managers can also access */}
+            <UsersPage />
+          </AdminProtectedRoute>
+        ),
+      },
     ],
   },
 ])
@@ -80,10 +103,3 @@ createRoot(document.getElementById('root')).render(
     </AuthChecker2>
   </Provider>
 )
-
-/* EXPLANATION:
-- Added SocketProvider around ChatLayout to provide socket context to all chat-related pages
-- Added dynamic route for individual chat rooms (:roomName)
-- Socket context is only active when users are in the chat section (more efficient)
-- Maintains your existing Redux and Auth structure
-*/

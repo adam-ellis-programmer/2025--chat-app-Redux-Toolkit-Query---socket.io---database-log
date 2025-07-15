@@ -1,17 +1,4 @@
-// import Message from "../models/Message"
 import Message from '../models/Message.js'
-// Similar structure for message controller
-export const getMessages = async (req, res) => {
-  try {
-    res.json({ message: 'Get all messages' })
-  } catch (error) {
-    res.status(500).json({ error: error.message })
-  }
-}
-
-// // Method 3: Multiple fields, different models
-// .populate('userId', 'username email')
-// .populate('roomId', 'name')
 
 export const getMessagesByRoom = async (req, res) => {
   try {
@@ -20,12 +7,25 @@ export const getMessagesByRoom = async (req, res) => {
       'userId',
       'username email profile.firstName'
     )
+
+    // console.log('messages', messages)
     res.json(messages)
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
 }
 
+// ==================================================================
+//  All below not in use yet
+// ==================================================================
+
+export const getMessages = async (req, res) => {
+  try {
+    res.json({ message: 'Get all messages' })
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+}
 export const createMessage = async (req, res) => {
   try {
     res.json({ message: 'Message created' })

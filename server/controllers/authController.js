@@ -206,6 +206,8 @@ export const login = async (req, res) => {
         isVerified: user.isVerified,
         profile: user.profile,
         lastLogin: user.lastLogin,
+        access: user.access || ['user'], // ← Include access array
+        isAdmin: user.isAdmin,
       },
     })
   } catch (error) {
@@ -400,18 +402,19 @@ export const resendVerificationEmail = async (req, res) => {
   }
 }
 
-
 // Add these functions to your existing server/controllers/authController.js
 
 // @desc    Google OAuth callback - handle successful authentication
-// @route   GET /api/auth/google/callback  
+// @route   GET /api/auth/google/callback
 // @access  Public
 export const googleCallback = async (req, res) => {
   try {
     // req.user will be populated by Passport middleware
     if (!req.user) {
-      return res.redirect(`${process.env.CLIENT_URL}/email-sign-in?error=auth_failed`)
-    } 
+      return res.redirect(
+        `${process.env.CLIENT_URL}/email-sign-in?error=auth_failed`
+      )
+    }
 
     // Update last login
     await req.user.updateLastLogin()
@@ -424,7 +427,6 @@ export const googleCallback = async (req, res) => {
 
     // Redirect to frontend dashboard
     res.redirect(`${process.env.CLIENT_URL}/chat/user`)
-    
   } catch (error) {
     console.error('Google callback error:', error)
     res.redirect(`${process.env.CLIENT_URL}/email-sign-in?error=server_error`)

@@ -26,6 +26,18 @@ const userSchema = new mongoose.Schema(
       match: [/^\S+@\S+\.\S+$/, 'Please provide a valid email address'],
     },
 
+    access: {
+      type: [String],
+      enum: ['user', 'manager', 'admin'],
+      default: ['user'],
+      validate: {
+        validator: function (arr) {
+          return arr.length > 0 // Must have at least one role
+        },
+        message: 'User must have at least one access role',
+      },
+    },
+
     googleId: {
       type: String,
       sparse: true, // Allows multiple null values

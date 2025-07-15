@@ -1,4 +1,4 @@
-// src/components/AuthChecker.jsx
+// src/components/AuthChecker2.jsx
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { setCredentials, setAuthCheckComplete } from '../store/authSlice.js'
@@ -19,37 +19,48 @@ const AuthChecker2 = ({ children }) => {
           const data = await response.json()
           if (data.success && data.user) {
             // User is authenticated, update Redux store
-
-            // added id so we can check auth in server socket handler
             const updatedUser = {
               ...data.user,
               id: data.user._id,
+              // Ensure access array exists
+              access: data.user.access || ['user'], // Default to 'user' if no access array
+              // Keep backward compatibility with isAdmin
+              isAdmin:
+                data.user.isAdmin ||
+                (data.user.access && data.user.access.includes('admin')),
             }
 
             dispatch(setCredentials(updatedUser))
           } else {
-            // No user found, mark auth check as complete / No JWT cookie sent / JWT cookie is expired/invalid
             dispatch(setAuthCheckComplete())
           }
         } else {
-          // Request failed, mark auth check as complete
-          // // HTTP error: 404, 500, network issues, etc.
           dispatch(setAuthCheckComplete())
         }
       } catch (error) {
         console.log('Auth check failed:', error)
-        // Mark auth check as complete even on error
         dispatch(setAuthCheckComplete())
       }
     }
 
-    // Only check if we don't already have user info in localStorage
+    // Check localStorage first
     const existingUserInfo = localStorage.getItem('userInfo')
     if (!existingUserInfo) {
       checkAuthStatus()
     } else {
-      // User exists in localStorage, no need to check API
-      dispatch(setAuthCheckComplete()) // SUCCESS CASE! User already exists
+      try {
+        const user = JSON.parse(existingUserInfo)
+        // Ensure access array exists in localStorage data
+        if (!user.access) {
+          // If no access array, check auth from server to get updated data
+          checkAuthStatus()
+        } else {
+          dispatch(setAuthCheckComplete())
+        }
+      } catch (error) {
+        // Invalid localStorage data, check from server
+        checkAuthStatus()
+      }
     }
   }, [dispatch])
 

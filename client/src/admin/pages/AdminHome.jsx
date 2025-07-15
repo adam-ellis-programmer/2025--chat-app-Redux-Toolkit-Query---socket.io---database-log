@@ -2,6 +2,8 @@ import React from 'react'
 import { IoChatbox } from 'react-icons/io5'
 import { FaUsers } from 'react-icons/fa6'
 import { useNavigate } from 'react-router'
+import BackBtn from '../../components/BackBtn'
+
 const AdminHome = () => {
   const navigate = useNavigate()
 
@@ -29,12 +31,19 @@ const AdminHome = () => {
             <IoChatbox className='text-8xl' />
             <p className='text-2xl font-[300] ml-10'>view chat logs </p>
           </div>
-          <div  onClick={handleUserNav} className='text-white   flex items-center shadow-2xl p-10 rounded-2xl cursor-pointer'>
+          <div
+            onClick={handleUserNav}
+            className='text-white   flex items-center shadow-2xl p-10 rounded-2xl cursor-pointer'
+          >
             <FaUsers className='text-8xl' />
             <p className='text-2xl font-[300] ml-10'>view users </p>
           </div>
         </div>
       </section>
+      {/* dynamic button */}
+      <div className='flex justify-center  mt-20'>
+        <BackBtn route='/' />
+      </div>
     </div>
   )
 }
