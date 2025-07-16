@@ -10,10 +10,13 @@ const ChatLayout = () => {
       <Outlet />
       {/* admin button container */}
       <div className='absolute bottom-5 right-8 '>
-        <Link to={`/admin`}>
-          <button className='bg-[#ea580c] text-white text-2xl p-3 rounded cursor-pointer'>
-            admin pannel
-          </button>
+        <Link
+          to='/admin'
+          target='_blank'
+          rel='noopener noreferrer'
+          className='admin-panel-link bg-[#ea580c] text-white text-2xl p-3 rounded cursor-pointer'
+        >
+          admin pannel
         </Link>
       </div>
     </div>

@@ -1,6 +1,6 @@
 // CreateChatPage.jsx
 import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { useSelector } from 'react-redux'
 import { useSocket } from '../context/SocketContext'
 import LogoutBtn from '../components/Auth Buttons/LogoutBtn'
@@ -96,6 +96,14 @@ const CreateChatPage = () => {
                 </div> */}
               </div>
             </form>
+            <div className='flex  max-w-[500px] mx-auto mt-10'>
+              <Link
+                to={`/chat/user`}
+                className='bg-rose-500 text-white text-2xl p-3 rounded-2xl'
+              >
+                My Profile
+              </Link>
+            </div>
           </div>
 
           <div>

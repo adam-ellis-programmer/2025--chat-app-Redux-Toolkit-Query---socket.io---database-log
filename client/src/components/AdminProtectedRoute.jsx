@@ -5,9 +5,9 @@ import { Navigate } from 'react-router'
 const AdminProtectedRoute = ({ children, requiredRoles = ['admin'] }) => {
   const { userInfo, isAuthLoading } = useSelector((state) => state.auth)
 
-  console.log('AdminProtectedRoute - userInfo:', userInfo)
-  console.log('AdminProtectedRoute - isAuthLoading:', isAuthLoading)
-  console.log('AdminProtectedRoute - userRoles:', userInfo?.access)
+  // console.log('AdminProtectedRoute - userInfo:', userInfo)
+  // console.log('AdminProtectedRoute - isAuthLoading:', isAuthLoading)
+  // console.log('AdminProtectedRoute - userRoles:', userInfo?.access)
 
   // Still checking auth status
   if (isAuthLoading) {
@@ -30,9 +30,9 @@ const AdminProtectedRoute = ({ children, requiredRoles = ['admin'] }) => {
   const userRoles = userInfo.access || []
   const hasRequiredRole = requiredRoles.some((role) => userRoles.includes(role))
 
-  console.log('Required roles:', requiredRoles)
-  console.log('User roles:', userRoles)
-  console.log('Has required role:', hasRequiredRole)
+  // console.log('Required roles:', requiredRoles)
+  // console.log('User roles:', userRoles)
+  // console.log('Has required role:', hasRequiredRole)
 
   // User doesn't have required role
   if (!hasRequiredRole) {

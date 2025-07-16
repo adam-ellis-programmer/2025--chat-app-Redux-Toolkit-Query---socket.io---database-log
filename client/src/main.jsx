@@ -64,6 +64,8 @@ const router = createBrowserRouter([
     ],
   },
   {
+    // certain areas are frontend protected here and
+    // we can use a hirearchy of 1-5 for further granular access on the server and / or frontend
     path: 'admin',
     element: (
       <AdminProtectedRoute requiredRoles={['admin']}>
@@ -76,8 +78,6 @@ const router = createBrowserRouter([
         path: 'logs',
         element: (
           <AdminProtectedRoute requiredRoles={['admin']}>
-            {' '}
-            {/* ← Extra protection for sensitive routes */}
             <ChatLogsPage />
           </AdminProtectedRoute>
         ),

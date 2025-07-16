@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useGetCurrentUserQuery } from '../store/authApiSlice.js'
 import FormTextInput from '../components/inputs/FormTextInput'
-
+import { Link } from 'react-router'
 const elements = [
   {
     id: 1,
@@ -193,6 +193,14 @@ const UserDash = () => {
                   </button>
                 </div>
               </form>
+              <div className=' mt-10'>
+                <Link
+                  to={'/'}
+                  className='p-4 border block w-full text-center border-rose-500 text-white text-2xl p-2 rounded hover:bg-rose-600 transition-colors'
+                >
+                  Home
+                </Link>
+              </div>
             </div>
           </div>
 

@@ -4,6 +4,7 @@ import { apiSlice } from './apiSlice.js'
 // API endpoints
 const ROOMS_URL = '/api/rooms'
 const MESSAGES_URL = '/api/messages'
+const AUTH_URL = '/api/auth'
 
 export const adminApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -13,6 +14,7 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         url: ROOMS_URL,
         method: 'GET',
       }),
+
       providesTags: ['Room'],
       transformResponse: (response) => {
         // Sort rooms by last activity (most recent first)
@@ -33,12 +35,22 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         { type: 'Message', id: roomId },
         'Message',
       ],
+
       transformResponse: (response) => {
         // Sort messages chronologically (oldest first for chat display)
         return response.sort(
           (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
         )
       },
+    }),
+
+    // Get all rooms with their message counts (for admin overview)
+    getAllUsers: builder.query({
+      query: () => ({
+        url: `${AUTH_URL}/all-users`,
+        method: 'GET',
+      }),
+      providesTags: ['User'],
     }),
 
     // // Get all rooms with their message counts (for admin overview)
@@ -74,6 +86,7 @@ export const adminApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetAllRoomsQuery,
   useGetRoomMessagesQuery,
+  useGetAllUsersQuery,
   // useGetRoomsWithStatsQuery,
   // useSearchRoomsQuery,
   // useGetRoomDetailsQuery,
