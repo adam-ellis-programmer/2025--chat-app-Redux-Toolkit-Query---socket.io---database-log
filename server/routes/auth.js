@@ -1,6 +1,6 @@
 import passport from 'passport'
-import { googleCallback } from '../controllers/authController.js'
 import express from 'express'
+import { getAllUsers, googleCallback } from '../controllers/authController.js'
 import {
   register,
   verifyEmail,
@@ -43,6 +43,11 @@ router.post('/login', validateLogin, login)
 // @desc    Get current user
 // @access  Private (will add auth middleware later)
 router.get('/me', authenticateToken, getCurrentUser)
+
+// @route   GET /api/auth/all-users
+// @desc    Get all users
+// @access  Private (will add auth middleware later)
+router.get('/all-users', getAllUsers)
 
 // @route   POST /api/auth/forgot-password
 // @desc    Request password reset

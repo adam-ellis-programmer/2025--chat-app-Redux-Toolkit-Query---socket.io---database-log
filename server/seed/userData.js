@@ -1,9 +1,6 @@
 // seed/userData.js
 import bcrypt from 'bcryptjs'
 
-// Pre-hash the password for all users
-// This is the hash of 'Password123' with salt rounds of 12
-// const hash = '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj0mg/MG2PrC'
 const saltRounds = 10
 const salt = bcrypt.genSaltSync(saltRounds)
 const hash = bcrypt.hashSync('111111', salt)

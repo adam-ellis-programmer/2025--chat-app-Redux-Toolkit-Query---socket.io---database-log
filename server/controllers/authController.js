@@ -260,6 +260,26 @@ export const getCurrentUser = async (req, res) => {
     })
   }
 }
+// @desc    Get current user
+// @route   GET /api/auth/me
+// @access  Private
+export const getAllUsers = async (req, res) => {
+  try {
+    // find all documents
+    const users = await User.find({})
+
+    res.json({
+      success: true,
+      users,
+    })
+  } catch (error) {
+    console.error('Get current user error:', error)
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+    })
+  }
+}
 
 // @desc    Request password reset
 // @route   POST /api/auth/forgot-password
