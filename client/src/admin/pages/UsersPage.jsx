@@ -23,10 +23,16 @@ const UsersPage = () => {
     { key: 'email', value: selectedUser.email || '', label: 'Email' }
   ]
 
+  const isSelectedUserEmpty = Object.keys(selectedUser).length === 0
+  console.log('isSelectedUserEmpty', isSelectedUserEmpty)
+
   return (
     <div>
       <section className='mt-5'>
         <p className='text-4xl text-center text-white capitalize'>users page</p>
+        <p className='text-2xl text-center text-white capitalize mt-2'>
+          admin panel
+        </p>
       </section>
 
       <section className='mt-10'>
@@ -35,7 +41,7 @@ const UsersPage = () => {
             <p className='text-center text-2xl text-white mb-10 capitalize'>
               select user
             </p>
-            <div className='h-130 overflow-scroll'>
+            <div className='h-130 overflow-scrol p-5 overflow-scroll'>
               {users.map((item, i) => {
                 return (
                   <article
@@ -46,7 +52,11 @@ const UsersPage = () => {
                       })
                     }
                     key={i}
-                    className={`text-white text-2xl shadow-2xl p-4 bg-[#1f2937] mb-5 rounded cursor-pointer `}
+                    className={`text-white text-2xl shadow-2xl p-4 mb-5 rounded cursor-pointer ${
+                      selectedUser.email === item.email
+                        ? 'bg-[#64748b] custom-offset-bd'
+                        : 'bg-[#1f2937]' // Default background
+                    }`}
                   >
                     <div className='flex items-center justify-between'>
                       <div>

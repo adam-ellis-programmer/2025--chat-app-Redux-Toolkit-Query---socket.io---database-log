@@ -1,6 +1,6 @@
 import passport from 'passport'
-import express from 'express'
 import { getAllUsers, googleCallback } from '../controllers/authController.js'
+import express from 'express'
 import {
   register,
   verifyEmail,
