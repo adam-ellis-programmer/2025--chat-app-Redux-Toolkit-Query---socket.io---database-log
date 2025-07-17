@@ -8,7 +8,7 @@ export const getMessagesByRoom = async (req, res) => {
       'username email profile.firstName'
     )
 
-    // console.log('messages', messages)
+    // console.log('messages-->', messages)
     res.json(messages)
   } catch (error) {
     res.status(500).json({ error: error.message })

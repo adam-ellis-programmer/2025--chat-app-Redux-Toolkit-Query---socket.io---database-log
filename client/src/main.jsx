@@ -18,10 +18,17 @@ import {
 import CreateChatPage from './pages/CreateChatPage.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import PublicRoute from './components/PublicRoute.jsx'
-import AdminProtectedRoute from './components/AdminProtectedRoute.jsx' // ← New import
+import AdminProtectedRoute from './components/AdminProtectedRoute.jsx'
 
 import AuthChecker from './components/AuthChecker.js'
 import AuthChecker2 from './components/AuthChecker2.js'
+
+// ERROR PAGES
+import RootErrorPage from './error/RootErrorPage.jsx'
+import ChatErrorPage from './error/ChatErrorPage.jsx'
+import AdminErrorPage from './error/AdminErrorPage.jsx'
+import NotFoundPage from './error/NotFoundPage.jsx'
+
 // ADMIN ROUTES
 import {
   AdminHome,
@@ -34,6 +41,7 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <HomeLayout />,
+    errorElement: <RootErrorPage />, // Root level errors
     children: [
       {
         index: true,
@@ -43,8 +51,16 @@ const router = createBrowserRouter([
           </PublicRoute>
         ),
       },
-      { path: 'email-sign-in', Component: EmailSignIn },
-      { path: 'email-register', Component: EmailRegister },
+      {
+        path: 'email-sign-in',
+        Component: EmailSignIn,
+        errorElement: <RootErrorPage />,
+      },
+      {
+        path: 'email-register',
+        Component: EmailRegister,
+        errorElement: <RootErrorPage />,
+      },
     ],
   },
   {
@@ -56,24 +72,44 @@ const router = createBrowserRouter([
         </SocketProvider>
       </ProtectedRoute>
     ),
+    errorElement: <ChatErrorPage />, // Chat-specific error handling
     children: [
-      { index: true, Component: ChatPage },
-      { path: 'create', Component: CreateChatPage },
-      { path: 'user', Component: UserDash },
-      { path: ':roomName', Component: ChatPage },
+      {
+        index: true,
+        Component: ChatPage,
+        errorElement: <ChatErrorPage />,
+      },
+      {
+        path: 'create',
+        Component: CreateChatPage,
+        errorElement: <ChatErrorPage />,
+      },
+      {
+        path: 'user',
+        Component: UserDash,
+        errorElement: <ChatErrorPage />,
+      },
+      {
+        path: ':roomName',
+        Component: ChatPage,
+        errorElement: <ChatErrorPage />, // Route-specific error handling
+      },
     ],
   },
   {
-    // certain areas are frontend protected here and
-    // we can use a hirearchy of 1-5 for further granular access on the server and / or frontend
     path: 'admin',
     element: (
       <AdminProtectedRoute requiredRoles={['admin']}>
         <AdminLayout />
       </AdminProtectedRoute>
     ),
+    errorElement: <AdminErrorPage />, // Admin-specific error handling
     children: [
-      { index: true, Component: AdminHome },
+      {
+        index: true,
+        Component: AdminHome,
+        errorElement: <AdminErrorPage />,
+      },
       {
         path: 'logs',
         element: (
@@ -81,18 +117,22 @@ const router = createBrowserRouter([
             <ChatLogsPage />
           </AdminProtectedRoute>
         ),
+        errorElement: <AdminErrorPage />,
       },
       {
         path: 'users',
         element: (
           <AdminProtectedRoute requiredRoles={['admin', 'manager']}>
-            {' '}
-            {/* ← Managers can also access */}
             <UsersPage />
           </AdminProtectedRoute>
         ),
+        errorElement: <AdminErrorPage />, // This will catch authorization errors
       },
     ],
+  },
+  {
+    path: '*',
+    element: <NotFoundPage />,
   },
 ])
 

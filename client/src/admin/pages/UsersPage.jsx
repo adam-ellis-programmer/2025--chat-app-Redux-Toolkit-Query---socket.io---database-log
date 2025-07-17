@@ -1,19 +1,33 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useGetAllUsersQuery } from '../../store/adminSlice'
 import BackBtn from '../../components/BackBtn'
 
 const UsersPage = () => {
   const [selectedUser, setSelectedUser] = useState({})
-  const { data, isLoading } = useGetAllUsersQuery()
+  const { data, isLoading, error, isError } = useGetAllUsersQuery()
+  console.log('error--->', error)
   const users = data?.users || []
 
-  if (!isLoading) {
-    console.log(users)
+  // Throw RTK Query errors to be caught by errorElement
+  if (isError && error) {
+    throw {
+      status: error.status,
+      data: error.data,
+      message: error.data?.message || 'An error occurred',
+    }
   }
 
+  // if (!isLoading) {
+  //   console.log(users)
+  // }
+
+  // Throw errors that will be caught by the route-level errorElement
+
+  // ****** leave for reference ******
   // Safe way to get profile entries
   // const profileEntries = Object.entries(selectedUser.profile || {})
   // {profileEntries.map(([key, value], index) => ( --> we use here in loop
+  // ****** leave for reference ******
 
   // Extract the specific fields to display
   // prettier-ignore
@@ -26,9 +40,49 @@ const UsersPage = () => {
   const isSelectedUserEmpty = Object.keys(selectedUser).length === 0
   console.log('isSelectedUserEmpty', isSelectedUserEmpty)
 
+  const handleInput = (key, value) => {
+    console.log('key test spread ', ...key)
+    console.log('key test nor', key)
+    console.log({
+      key,
+      value,
+    })
+    // Use ... as "unwrapping" the object and placing its properties directly into the parent object, rather than nesting the entire object as a single property.
+    setSelectedUser((prev) => ({
+      ...prev,
+      ...(key === 'email'
+        ? { email: value }
+        : {
+            profile: {
+              ...prev.profile,
+              [key]: value,
+            },
+          }),
+    }))
+  }
+
+  if (isLoading) {
+    return (
+      <div className='bg-white h-screen flex justify-center items-center text-8xl'>
+        Loading
+      </div>
+    )
+  }
+
+  // if (isError) {
+  //   return (
+  //     <div className='bg-white h-screen flex justify-center items-center text-3xl flex-col'>
+  //       <p> {error.data.message}</p>
+  //       <div className='mt-5'>
+  //         <BackBtn route={`/`} />
+  //       </div>
+  //     </div>
+  //   )
+  // }
+
   return (
     <div>
-      <section className='mt-5'>
+      <section className='pt-15'>
         <p className='text-4xl text-center text-white capitalize'>users page</p>
         <p className='text-2xl text-center text-white capitalize mt-2'>
           admin panel
@@ -80,30 +134,42 @@ const UsersPage = () => {
             </p>
 
             <div className='h-100 bg-[#4b5563] p-5'>
-              <form onSubmit={(e) => e.preventDefault()} action=''>
-                <div className='grid grid-cols-2 gap-4'>
-                  {userFields.map((field, i) => {
-                    return (
-                      <input
-                        key={field.key}
-                        type={field.key === 'email' ? 'email' : 'text'}
-                        name={field.key}
-                        id={field.key}
-                        className={`bg-white w-full text-2xl p-3 rounded ${
-                          i === 2 && 'col-span-full'
-                        }`}
-                        placeholder={field.label}
-                        defaultValue={field.value}
-                      />
-                    )
-                  })}
+              {isSelectedUserEmpty ? (
+                <div className='flex items-center justify-center h-full'>
+                  <p className='text-white text-2xl text-center'>
+                    Please select a user on the left
+                  </p>
                 </div>
-                <div className='mt-5 rounded'>
-                  <button className='text-2xl text-white text-center bg-red-500 p-2 w-40 cursor-pointer'>
-                    update
-                  </button>
-                </div>
-              </form>
+              ) : (
+                <form onSubmit={(e) => e.preventDefault()} action=''>
+                  <div className='grid grid-cols-2 gap-4'>
+                    {userFields.map((field, i) => {
+                      return (
+                        <input
+                          key={field.key}
+                          type={field.key === 'email' ? 'email' : 'text'}
+                          name={field.key}
+                          id={field.key}
+                          className={`bg-white w-full text-2xl p-3 rounded ${
+                            i === 2 && 'col-span-full'
+                          }`}
+                          placeholder={field.label}
+                          value={field.value}
+                          onChange={(e) =>
+                            handleInput(field.key, e.target.value)
+                          }
+                          // readOnly
+                        />
+                      )
+                    })}
+                  </div>
+                  <div className='mt-5 rounded'>
+                    <button className='text-2xl text-white text-center bg-red-500 p-2 w-40 cursor-pointer transition-transform duration-500 active:scale-90 hover:scale-105'>
+                      update
+                    </button>
+                  </div>
+                </form>
+              )}
             </div>
             {/*  */}
             <div className='mt-5 flex justify-end'>

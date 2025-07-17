@@ -16,6 +16,7 @@ const ChatLogWindow = ({ selectedRoom }) => {
   } = useGetRoomMessagesQuery(selectedRoom?._id, {
     skip: !selectedRoom?._id, // Don't fetch if no room selected
   })
+  
 
   const handleScrollTop = () => {
     if (chatLogRef.current) {

@@ -3,7 +3,7 @@ import { Outlet } from 'react-router'
 
 const AdminLayout = () => {
   return (
-    <div className='border min-h-screen home-screen'>
+    <div className=' min-h-screen home-screen'>
       <Outlet />
     </div>
   )

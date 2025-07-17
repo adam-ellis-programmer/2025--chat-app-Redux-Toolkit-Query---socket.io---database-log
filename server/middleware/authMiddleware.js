@@ -5,7 +5,7 @@ import User from '../models/User.js'
 export const authenticateToken = async (req, res, next) => {
   try {
     // Get token from cookie
-    const token = req.cookies.token 
+    const token = req.cookies.token
     // console.log(token)
 
     if (!token) {
@@ -56,6 +56,66 @@ export const authenticateToken = async (req, res, next) => {
     return res.status(500).json({
       success: false,
       message: 'Server error during authentication.',
+    })
+  }
+}
+
+export const checkIsAdmin = async (req, res, next) => {
+  try {
+    // Get token from cookie
+    const token = req.cookies.token
+
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: 'Access denied. No token provided.',
+      })
+    }
+
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+
+    // Get user from database (optional - for fresh user data)
+    const user = await User.findById(decoded.id).select('-password')
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Token is valid but user no longer exists.',
+      })
+    }
+
+    // Check if user has manager access
+    if (!user.access.includes('admin')) {
+      return res.status(403).json({
+        success: false,
+        message: 'You are not authorized to view this data!!',
+      })
+    }
+
+    next()
+  } catch (error) {
+    console.log('error log-->', error)
+
+    // Handle different types of errors
+    if (error.name === 'JsonWebTokenError') {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid token',
+      })
+    }
+
+    if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({
+        success: false,
+        message: 'Token expired',
+      })
+    }
+
+    // Generic server error
+    return res.status(500).json({
+      success: false,
+      message: 'Server error',
     })
   }
 }

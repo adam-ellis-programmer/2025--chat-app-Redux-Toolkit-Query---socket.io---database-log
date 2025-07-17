@@ -19,7 +19,10 @@ import {
   validateEmail,
 } from '../middleware/validation.js'
 
-import { authenticateToken } from '../middleware/authMiddleware.js'
+import {
+  authenticateToken,
+  checkIsAdmin,
+} from '../middleware/authMiddleware.js'
 
 const router = express.Router()
 // /api/auth/...
@@ -47,7 +50,7 @@ router.get('/me', authenticateToken, getCurrentUser)
 // @route   GET /api/auth/all-users
 // @desc    Get all users
 // @access  Private (will add auth middleware later)
-router.get('/all-users', getAllUsers)
+router.get('/all-users', checkIsAdmin, getAllUsers)
 
 // @route   POST /api/auth/forgot-password
 // @desc    Request password reset
