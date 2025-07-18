@@ -108,20 +108,12 @@ const router = createBrowserRouter([
       },
       {
         path: 'logs',
-        element: (
-          <AdminProtectedRoute requiredRoles={['admin']}>
-            <ChatLogsPage />
-          </AdminProtectedRoute>
-        ),
+        element: <ChatLogsPage />,
         errorElement: <AdminErrorPage />,
       },
       {
         path: 'users',
-        element: (
-          <AdminProtectedRoute requiredRoles={['admin', 'manager']}>
-            <UsersPage />
-          </AdminProtectedRoute>
-        ),
+        element: <UsersPage />,
         errorElement: <AdminErrorPage />,
       },
     ],
@@ -134,8 +126,6 @@ const router = createBrowserRouter([
 console.log(import.meta.env.VITE_NODE_ENV)
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>
-    <AuthChecker2>
-      <RouterProvider router={router} />
-    </AuthChecker2>
+    <RouterProvider router={router} />
   </Provider>
 )
