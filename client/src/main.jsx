@@ -135,7 +135,7 @@ const router = createBrowserRouter([
     element: <NotFoundPage />,
   },
 ])
-
+console.log(import.meta.env.VITE_NODE_ENV)
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>
     <AuthChecker2>
