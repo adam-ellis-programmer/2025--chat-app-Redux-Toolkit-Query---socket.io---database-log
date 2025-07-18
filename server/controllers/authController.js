@@ -15,7 +15,7 @@ const setTokenCookie = (res, token) => {
     sameSite: isProduction ? 'none' : 'strict', // ✅ FIXED: 'none' for cross-origin in production
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
     path: '/', // Available for entire site
-    domain: isProduction ? undefined : undefined, // Let browser handle domain
+    // domain: isProduction ? undefined : undefined, // Let browser handle domain
   })
 }
 
