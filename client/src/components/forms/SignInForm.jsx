@@ -11,14 +11,14 @@ const formfields = [
     name: 'email',
     placeholder: 'Enter Email',
     type: 'email',
-    default: 'test@example.com',
+    default: 'emma.wilson@example.com',
   },
   {
     id: 2,
     name: 'password',
     placeholder: 'Enter Password',
     type: 'password',
-    default: 'Password123',
+    default: '111111',
   },
 ]
 
