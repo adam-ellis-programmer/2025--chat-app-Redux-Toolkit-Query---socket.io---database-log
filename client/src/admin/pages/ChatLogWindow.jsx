@@ -13,10 +13,12 @@ const ChatLogWindow = ({ selectedRoom }) => {
     isError,
     error,
     refetch,
-  } = useGetRoomMessagesQuery(selectedRoom?._id, {
+  } = useGetRoomMessagesQuery(selectedRoom?._id, { 
     skip: !selectedRoom?._id, // Don't fetch if no room selected
+    // api/rooms
   })
-  
+
+  console.log('isError', error)
 
   const handleScrollTop = () => {
     if (chatLogRef.current) {

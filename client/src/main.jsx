@@ -72,7 +72,7 @@ const router = createBrowserRouter([
         </SocketProvider>
       </ProtectedRoute>
     ),
-    errorElement: <ChatErrorPage />, // Chat-specific error handling
+    errorElement: <ChatErrorPage />,
     children: [
       {
         index: true,
@@ -92,7 +92,7 @@ const router = createBrowserRouter([
       {
         path: ':roomName',
         Component: ChatPage,
-        errorElement: <ChatErrorPage />, // Route-specific error handling
+        errorElement: <ChatErrorPage />,
       },
     ],
   },
@@ -103,7 +103,7 @@ const router = createBrowserRouter([
         <AdminLayout />
       </AdminProtectedRoute>
     ),
-    errorElement: <AdminErrorPage />, // Admin-specific error handling
+    errorElement: <AdminErrorPage />,
     children: [
       {
         index: true,
@@ -126,7 +126,7 @@ const router = createBrowserRouter([
             <UsersPage />
           </AdminProtectedRoute>
         ),
-        errorElement: <AdminErrorPage />, // This will catch authorization errors
+        errorElement: <AdminErrorPage />,
       },
     ],
   },

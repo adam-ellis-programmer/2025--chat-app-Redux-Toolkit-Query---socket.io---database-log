@@ -5,10 +5,25 @@ import ChatLogWindow from './ChatLogWindow'
 import ChatRoomSelection from './ChatRoomSelection'
 import BackBtn from '../../components/BackBtn'
 import { useNavigate } from 'react-router'
+import { useGetAllRoomsQuery } from '../../store/adminSlice'
+
 const ChatLogsPage = () => {
   const navigate = useNavigate()
   const [selectedRoom, setSelectedRoom] = useState(null)
+
+  // Add the query hook here to check loading state
+  const { isLoading, isError, error } = useGetAllRoomsQuery()
+
   console.log('Selected Room: -->', selectedRoom)
+
+  // Throw RTK Query errors to be caught by errorElement
+  if (isError && error) {
+    throw {
+      status: error.status,
+      data: error.data,
+      message: error.data?.message || 'An error occurred',
+    }
+  } 
 
   const handleRoomSelect = (room) => {
     setSelectedRoom(room)
@@ -18,6 +33,21 @@ const ChatLogsPage = () => {
     // This will be handled by the SearchChats component
     // You can add additional search logic here if needed
     console.log('Searching for:', searchTerm)
+  }
+
+  // Show loading state while checking auth and fetching data
+  if (isLoading) {
+    return (
+      <div className='min-h-screen flex items-center justify-center bg-gray-900'>
+        <div className='text-center'>
+          <div className='animate-spin rounded-full h-16 w-16 border-b-2 border-rose-500 mx-auto mb-4'></div>
+          <p className='text-white text-xl'>Loading Chat Logs...</p>
+          <p className='text-gray-400 text-sm mt-2'>
+            Verifying permissions and fetching rooms
+          </p>
+        </div>
+      </div>
+    )
   }
 
   return (

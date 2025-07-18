@@ -14,7 +14,7 @@ export const adminApiSlice = apiSlice.injectEndpoints({
         url: ROOMS_URL,
         method: 'GET',
       }),
-
+      
       providesTags: ['Room'],
       transformResponse: (response) => {
         // Sort rooms by last activity (most recent first)

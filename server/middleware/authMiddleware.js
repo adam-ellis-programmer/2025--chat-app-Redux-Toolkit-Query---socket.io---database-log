@@ -86,7 +86,7 @@ export const checkIsAdmin = async (req, res, next) => {
     }
 
     // Check if user has manager access
-    if (!user.access.includes('admin')) {
+    if (!user.access.includes('manager')) {
       return res.status(403).json({
         success: false,
         message: 'You are not authorized to view this data!!',

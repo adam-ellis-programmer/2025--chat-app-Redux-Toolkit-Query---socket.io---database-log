@@ -12,6 +12,17 @@ const ChatRoomSelection = ({ selectedRoom, onRoomSelect }) => {
     error,
     refetch,
   } = useGetAllRoomsQuery()
+ 
+  console.log('isError-->', error)
+
+  // Throw RTK Query errors to be caught by errorElement
+  if (isError && error) {
+    throw {
+      status: error.status,
+      data: error.data,
+      message: error.data?.message || 'An error occurred',
+    }
+  }
 
   // Filter rooms based on search term
   const filteredRooms = rooms.filter(
@@ -31,39 +42,19 @@ const ChatRoomSelection = ({ selectedRoom, onRoomSelect }) => {
     })
   }
 
-  if (isLoading) {
-    return (
-      <div className='mt-10 text-white'>
-        <div className='shadow-2xl p-5 bg-rose-500 rounded'>
-          <p className='text-2xl text-center capitalize'>select chat room</p>
-        </div>
-        <div className='p-10 text-center'>
-          <p>Loading rooms...</p>
-        </div>
-      </div>
-    )
-  }
-
-  if (isError) {
-    return (
-      <div className='mt-10 text-white'>
-        <div className='shadow-2xl p-5 bg-rose-500 rounded'>
-          <p className='text-2xl text-center capitalize'>select chat room</p>
-        </div>
-        <div className='p-10 text-center'>
-          <p className='text-red-400 mb-4'>
-            Error loading rooms: {error?.data?.error || error?.message}
-          </p>
-          <button
-            onClick={refetch}
-            className='bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded'
-          >
-            Retry
-          </button>
-        </div>
-      </div>
-    )
-  }
+  // Remove loading state since it's handled by parent component
+  // if (isLoading) {
+  //   return (
+  //     <div className='mt-10 text-white'>
+  //       <div className='shadow-2xl p-5 bg-rose-500 rounded'>
+  //         <p className='text-2xl text-center capitalize'>select chat room</p>
+  //       </div>
+  //       <div className='p-10 text-center'>
+  //         <p>Loading rooms...</p>
+  //       </div>
+  //     </div>
+  //   )
+  // }
 
   return (
     <div className='mt-10 text-white'>
