@@ -1,4 +1,4 @@
-// src/components/AuthChecker2.jsx
+// src/components/AuthChecker2.jsx - FIXED VERSION
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { setCredentials, setAuthCheckComplete } from '../store/authSlice.js'
@@ -10,6 +10,7 @@ const AuthChecker2 = ({ children }) => {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
+        console.log('🔍 AuthChecker2: Checking server auth status...')
         const response = await fetch(BASE_URL + '/api/auth/me', {
           method: 'GET',
           credentials: 'include',
@@ -18,13 +19,12 @@ const AuthChecker2 = ({ children }) => {
         if (response.ok) {
           const data = await response.json()
           if (data.success && data.user) {
+            console.log('✅ AuthChecker2: Server auth successful')
             // User is authenticated, update Redux store
             const updatedUser = {
               ...data.user,
               id: data.user._id,
-              // Ensure access array exists
-              access: data.user.access || ['user'], // Default to 'user' if no access array
-              // Keep backward compatibility with isAdmin
+              access: data.user.access || ['user'],
               isAdmin:
                 data.user.isAdmin ||
                 (data.user.access && data.user.access.includes('admin')),
@@ -32,35 +32,35 @@ const AuthChecker2 = ({ children }) => {
 
             dispatch(setCredentials(updatedUser))
           } else {
+            console.log('❌ AuthChecker2: Server auth failed - no user data')
             dispatch(setAuthCheckComplete())
           }
         } else {
+          console.log('❌ AuthChecker2: Server auth failed - response not ok')
           dispatch(setAuthCheckComplete())
         }
       } catch (error) {
-        console.log('Auth check failed:', error)
+        console.log(
+          '❌ AuthChecker2: Server auth failed - network error:',
+          error
+        )
         dispatch(setAuthCheckComplete())
       }
     }
 
-    // Check localStorage first
+    // ✅ KEY FIX: Always check server-side authentication
+    // Don't rely solely on localStorage in production
     const existingUserInfo = localStorage.getItem('userInfo')
+
     if (!existingUserInfo) {
+      console.log('📭 AuthChecker2: No localStorage, checking server...')
       checkAuthStatus()
     } else {
-      try {
-        const user = JSON.parse(existingUserInfo)
-        // Ensure access array exists in localStorage data
-        if (!user.access) {
-          // If no access array, check auth from server to get updated data
-          checkAuthStatus()
-        } else {
-          dispatch(setAuthCheckComplete())
-        }
-      } catch (error) {
-        // Invalid localStorage data, check from server
-        checkAuthStatus()
-      }
+      console.log(
+        '📦 AuthChecker2: Found localStorage, but verifying with server...'
+      )
+      // ✅ ALWAYS verify with server, especially for incognito/mobile
+      checkAuthStatus()
     }
   }, [dispatch])
 
