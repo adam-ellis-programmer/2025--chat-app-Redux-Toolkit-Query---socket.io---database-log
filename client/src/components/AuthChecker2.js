@@ -1,4 +1,5 @@
-// src/components/AuthChecker2.jsx - FIXED VERSION
+// Updated AuthChecker2.jsx - Handle both cookie and token authentication
+
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { setCredentials, setAuthCheckComplete } from '../store/authSlice.js'
@@ -11,16 +12,31 @@ const AuthChecker2 = ({ children }) => {
     const checkAuthStatus = async () => {
       try {
         console.log('🔍 AuthChecker2: Checking server auth status...')
-        const response = await fetch(BASE_URL + '/api/auth/me', {
+
+        // ✅ Try cookie-based auth first
+        let response = await fetch(BASE_URL + '/api/auth/me', {
           method: 'GET',
           credentials: 'include',
         })
+
+        // ✅ If cookie auth fails in production, try token from localStorage
+        if (!response.ok) {
+          const storedToken = localStorage.getItem('authToken')
+          if (storedToken) {
+            console.log('🔄 Cookie auth failed, trying token auth...')
+            response = await fetch(BASE_URL + '/api/auth/me', {
+              method: 'GET',
+              headers: {
+                Authorization: `Bearer ${storedToken}`,
+              },
+            })
+          }
+        }
 
         if (response.ok) {
           const data = await response.json()
           if (data.success && data.user) {
             console.log('✅ AuthChecker2: Server auth successful')
-            // User is authenticated, update Redux store
             const updatedUser = {
               ...data.user,
               id: data.user._id,
@@ -29,7 +45,6 @@ const AuthChecker2 = ({ children }) => {
                 data.user.isAdmin ||
                 (data.user.access && data.user.access.includes('admin')),
             }
-
             dispatch(setCredentials(updatedUser))
           } else {
             console.log('❌ AuthChecker2: Server auth failed - no user data')
@@ -37,6 +52,8 @@ const AuthChecker2 = ({ children }) => {
           }
         } else {
           console.log('❌ AuthChecker2: Server auth failed - response not ok')
+          // Clear any stored token if auth fails
+          localStorage.removeItem('authToken')
           dispatch(setAuthCheckComplete())
         }
       } catch (error) {
@@ -48,20 +65,7 @@ const AuthChecker2 = ({ children }) => {
       }
     }
 
-    // ✅ KEY FIX: Always check server-side authentication
-    // Don't rely solely on localStorage in production
-    const existingUserInfo = localStorage.getItem('userInfo')
-
-    if (!existingUserInfo) {
-      console.log('📭 AuthChecker2: No localStorage, checking server...')
-      checkAuthStatus()
-    } else {
-      console.log(
-        '📦 AuthChecker2: Found localStorage, but verifying with server...'
-      )
-      // ✅ ALWAYS verify with server, especially for incognito/mobile
-      checkAuthStatus()
-    }
+    checkAuthStatus()
   }, [dispatch])
 
   return children

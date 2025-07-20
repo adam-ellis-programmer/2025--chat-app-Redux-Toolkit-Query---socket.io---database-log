@@ -45,27 +45,34 @@ const SignInForm = () => {
     })
   }
 
+  // SignInForm.jsx - Update handleSubmit to store token in production
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setValidationError('')
 
-    // Basic validation
     if (!formData.email || !formData.password) {
       setValidationError('Please fill in all fields')
       return
     }
 
     try {
-      // Login user with RTK Query
       const result = await login({
         email: formData.email,
         password: formData.password,
       }).unwrap()
 
-      // User is automatically logged in (cookie set by backend)
+      // ✅ In production, store token in localStorage as fallback
+      const isProduction =
+        import.meta.env.PROD || !window.location.hostname.includes('localhost')
+
+      if (isProduction && result.token) {
+        console.log('🌐 Production: Storing auth token in localStorage')
+        localStorage.setItem('authToken', result.token)
+      }
+
       // Update Redux state
       dispatch(setCredentials(result.user))
-
       console.log('Login successful:', result.message)
 
       // Navigate to chat create page
