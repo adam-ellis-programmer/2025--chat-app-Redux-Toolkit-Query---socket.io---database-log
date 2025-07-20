@@ -11,29 +11,14 @@ import { io } from 'socket.io-client'
 
 const SocketContext = createContext()
 
-// The useSocket hook is like a radio receiver. It:
-
-// "Tunes into" the SocketContext frequency with useContext(SocketContext)
-// Receives the entire value object that was broadcast
-// Returns that entire object
-
-// Step 3: The Hook Receives the Broadcast
-// This hook reduces boiler plate code across the app
-//  classic DRY principle (Don't Repeat Yourself)
 export const useSocket = () => {
-  const context = useContext(SocketContext) // ← "Tune into the radio frequency"
+  const context = useContext(SocketContext)
   if (!context) {
     throw new Error('useSocket must be used within a SocketProvider')
   }
-  return context // ← Return the entire broadcast (the 'value' object)
+  return context
 }
 
-// The SocketProvider is like the radio tower. It:
-// Creates all the state variables and functions
-// Packages them into the value object
-// Broadcasts this value object through SocketContext.Provider
-
-// SocketProvider imported and used in main.js
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null)
   const [currentRoom, setCurrentRoom] = useState(null)
@@ -42,24 +27,45 @@ export const SocketProvider = ({ children }) => {
   const [participants, setParticipants] = useState([])
   const [isConnected, setIsConnected] = useState(false)
 
-  // Get user from Redux store - corrected path
+  // Get user from Redux store
   const user = useSelector((state) => state.auth.userInfo)
-  console.log('USER------------>', user.id)
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated)
+  const isAuthLoading = useSelector((state) => state.auth.isAuthLoading)
+
+  console.log('🔍 SocketContext - Auth State:', {
+    user: !!user,
+    isAuthenticated,
+    isAuthLoading,
+    userId: user?.id,
+  })
 
   const isProduction = import.meta.env.VITE_NODE_ENV === 'production'
-  console.log('isProduction---->', isProduction)
 
   useEffect(() => {
     console.log('🔍 SocketContext useEffect triggered')
-    console.log('👤 User from Redux:', user)
-    // console.log('👤 User object keys:', user ? Object.keys(user) : 'no user') // Add this line
 
-    // Only initialize socket if user is authenticated
-    if (!user) {
-      console.log('❌ No user found, not connecting socket')
+    // ✅ KEY FIX: Only connect if user is authenticated and auth check is complete
+    if (!user || !isAuthenticated || isAuthLoading) {
+      console.log(
+        '❌ Not connecting socket - user not authenticated or auth loading'
+      )
+
+      // Clean up existing socket if user logs out
+      if (socket) {
+        console.log('🧹 Cleaning up existing socket connection')
+        socket.close()
+        setSocket(null)
+        setIsConnected(false)
+        setCurrentRoom(null)
+        setMessages([])
+        setParticipants([])
+        setAvailableRooms([])
+      }
       return
     }
-    console.log('mode----->', import.meta.env.MODE)
+
+    // ✅ Only reach here if user is fully authenticated
+    console.log('✅ User authenticated, initializing socket connection')
 
     const serverUrl = isProduction
       ? import.meta.env.VITE_SERVER_URL
@@ -163,7 +169,7 @@ export const SocketProvider = ({ children }) => {
       console.log('🧹 Cleaning up socket connection')
       newSocket.close()
     }
-  }, [user]) // Re-create socket when user changes
+  }, [user, isAuthenticated, isAuthLoading]) // ✅ Added isAuthLoading to dependencies
 
   const createRoom = (roomName, userId, userName) => {
     console.log('🏗️ Attempting to create room:', {
@@ -175,7 +181,6 @@ export const SocketProvider = ({ children }) => {
     })
     if (socket && isConnected) {
       console.log('📤 Emitting create-room event')
-      // sends
       socket.emit('create-room', { roomName, userId, userName })
     } else {
       console.error('❌ Cannot create room: socket not connected', {
@@ -279,7 +284,6 @@ export const SocketProvider = ({ children }) => {
     getRooms,
   }
 
-  // // BROADCAST this data to all children components
   return (
     <SocketContext.Provider value={value}>{children}</SocketContext.Provider>
   )
