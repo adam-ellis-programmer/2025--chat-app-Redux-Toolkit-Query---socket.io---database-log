@@ -6,26 +6,48 @@ import User from '../models/User.js'
 import { generateToken } from '../utils/jwt.js'
 
 // Set JWT cookie
+// authController.js - COMPLETE FIX for cross-domain cookies
+
 const setTokenCookie = (res, token) => {
   const isProduction = process.env.NODE_ENV === 'production'
 
-  res.cookie('token', token, {
+  console.log('🍪 Setting cookie - Environment:', {
+    isProduction,
+    clientUrl: process.env.CLIENT_URL,
+    nodeEnv: process.env.NODE_ENV,
+  })
+
+  const cookieOptions = {
     httpOnly: true, // Prevents XSS attacks
     secure: isProduction, // HTTPS only in production
-    sameSite: isProduction ? 'none' : 'strict', // ✅ FIXED: 'none' for cross-origin in production
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
-    path: '/', // Available for entire site
-    domain: isProduction ? undefined : undefined, // Let browser handle domain
-  })
+    sameSite: isProduction ? 'none' : 'lax', // ✅ CRITICAL: 'none' for cross-domain
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    path: '/', // ✅ MANDATORY: Must be set for cross-domain
+    // ✅ DO NOT set domain - let browser handle it
+  }
+
+  console.log('🍪 Cookie options:', cookieOptions)
+
+  res.cookie('token', token, cookieOptions)
+
+  // ✅ Debug: Log the Set-Cookie header
+  console.log('🍪 Set-Cookie header will be:', res.getHeader('Set-Cookie'))
 }
+
 //
 // Clear JWT cookie
 const clearTokenCookie = (res) => {
+  const isProduction = process.env.NODE_ENV === 'production'
+
   res.cookie('token', '', {
     httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax', // ✅ Same settings for clearing
     expires: new Date(0),
-    path: '/',
+    path: '/', // ✅ MANDATORY: Same path for clearing
   })
+
+  console.log('🧹 Cookie cleared with same settings')
 }
 
 // @desc    Register a new user
