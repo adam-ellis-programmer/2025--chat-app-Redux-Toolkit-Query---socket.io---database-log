@@ -18,7 +18,7 @@ const setTokenCookie = (res, token) => {
     domain: isProduction ? undefined : undefined, // Let browser handle domain
   })
 }
-// 
+//
 // Clear JWT cookie
 const clearTokenCookie = (res) => {
   res.cookie('token', '', {

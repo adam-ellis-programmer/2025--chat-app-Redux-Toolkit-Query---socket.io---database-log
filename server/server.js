@@ -50,10 +50,13 @@ app.use(cookieParser())
 app.use(
   cors({
     origin: [
-      process.env.CLIENT_URL || 'http://localhost:5173',
-      'https://socket-io-app-mern-deployed.vercel.app',
-    ],
+      'http://localhost:5173', // Development frontend
+      'https://socket-io-app-mern-deployed.vercel.app', // Production frontend
+      process.env.CLIENT_URL, // Additional client URL from env
+    ].filter(Boolean), // Remove any undefined values
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
   })
 )
 

@@ -126,6 +126,8 @@ const router = createBrowserRouter([
 console.log(import.meta.env.VITE_NODE_ENV)
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>
-    <RouterProvider router={router} />
+    <AuthChecker2>
+      <RouterProvider router={router} />
+    </AuthChecker2>
   </Provider>
 )
