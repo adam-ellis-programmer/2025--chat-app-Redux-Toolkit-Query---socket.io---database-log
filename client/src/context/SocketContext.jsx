@@ -19,7 +19,7 @@ const SocketContext = createContext()
 
 // Step 3: The Hook Receives the Broadcast
 // This hook reduces boiler plate code across the app
-//  classic DRY principle (Don't Repeat Yourself) 
+//  classic DRY principle (Don't Repeat Yourself)
 export const useSocket = () => {
   const context = useContext(SocketContext) // ← "Tune into the radio frequency"
   if (!context) {
@@ -46,6 +46,9 @@ export const SocketProvider = ({ children }) => {
   const user = useSelector((state) => state.auth.userInfo)
   console.log('USER------------>', user.id)
 
+  const isProduction = import.meta.env.VITE_NODE_ENV === 'production'
+  console.log('isProduction---->', isProduction)
+
   useEffect(() => {
     console.log('🔍 SocketContext useEffect triggered')
     console.log('👤 User from Redux:', user)
@@ -56,8 +59,12 @@ export const SocketProvider = ({ children }) => {
       console.log('❌ No user found, not connecting socket')
       return
     }
+    console.log('mode----->', import.meta.env.MODE)
 
-    const serverUrl = import.meta.env.VITE_SERVER_URL || 'http://localhost:5001'
+    const serverUrl = isProduction
+      ? import.meta.env.VITE_SERVER_URL
+      : 'http://localhost:5001'
+
     console.log('🔗 Attempting to connect to:', serverUrl)
 
     const newSocket = io(serverUrl, {
